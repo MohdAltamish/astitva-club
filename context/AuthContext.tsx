@@ -133,12 +133,22 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
       }
       return { success: true };
     } catch (err: unknown) {
+      let message = "Google sign-in failed. Please try again.";
+      if (err instanceof Error) {
+        if (err.message.includes("auth/unauthorized-domain")) {
+          const currentHostname = typeof window !== "undefined" ? window.location.hostname : "your domain";
+          message = `Unauthorized Domain: "${currentHostname}" is not added to Firebase Authorized Domains. Please add "${currentHostname}" in Firebase Console > Authentication > Settings > Authorized domains.`;
+        } else if (err.message.includes("auth/popup-closed-by-user")) {
+          message = "Sign-in cancelled: The Google popup was closed.";
+        } else if (err.message.includes("auth/popup-blocked")) {
+          message = "Popup blocked: Please allow popups in your browser to sign in with Google.";
+        } else {
+          message = err.message;
+        }
+      }
       return {
         success: false,
-        error:
-          err instanceof Error
-            ? err.message
-            : "Google sign-in failed. Please try again.",
+        error: message,
       };
     }
   };
