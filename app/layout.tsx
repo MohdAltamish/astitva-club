@@ -8,6 +8,7 @@ import type { Metadata } from "next";
 import { Playfair_Display, Cormorant_SC, Inter } from "next/font/google";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
+import { AuthProvider } from "@/context/AuthContext";
 import "./globals.css";
 
 const playfairDisplay = Playfair_Display({
@@ -50,9 +51,11 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
       className={`${playfairDisplay.variable} ${cormorantSC.variable} ${inter.variable} h-full`}
     >
       <body className="min-h-full flex flex-col bg-black-950 text-white antialiased">
-        <Navbar />
-        <main className="flex-1">{children}</main>
-        <Footer />
+        <AuthProvider>
+          <Navbar />
+          <main className="flex-1">{children}</main>
+          <Footer />
+        </AuthProvider>
       </body>
     </html>
   );

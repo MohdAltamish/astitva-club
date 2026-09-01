@@ -5,23 +5,36 @@
  * Sections: Hero, Category Filter, Photo Grid with Lightbox.
  */
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import KickerLabel from "@/components/KickerLabel";
 import SectionHeading from "@/components/SectionHeading";
 import Button from "@/components/Button";
-import { galleryItems, GalleryItem } from "@/data/gallery";
+import { getGalleryItems } from "@/lib/data-service";
+import { GalleryItem } from "@/data/gallery";
 import { JOIN_FORM_URL } from "@/data/links";
 
 const categories = ["All", "Community", "Events", "Creative", "Memories"] as const;
 
 export default function GalleryPage() {
+  const [items, setItems] = useState<GalleryItem[]>([]);
   const [selectedCategory, setSelectedCategory] = useState<string>("All");
   const [activeItem, setActiveItem] = useState<GalleryItem | null>(null);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    async function load() {
+      setLoading(true);
+      const data = await getGalleryItems();
+      setItems(data);
+      setLoading(false);
+    }
+    load();
+  }, []);
 
   const filteredItems =
     selectedCategory === "All"
-      ? galleryItems
-      : galleryItems.filter((item) => item.category === selectedCategory);
+      ? items
+      : items.filter((item) => item.category === selectedCategory);
 
   return (
     <div className="pt-28 pb-20 md:py-36 bg-black-950 min-h-screen">
@@ -64,47 +77,53 @@ export default function GalleryPage() {
         {/* ═══════════════════════════════════════════════════════
             GALLERY GRID
             ═══════════════════════════════════════════════════════ */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
-          {filteredItems.map((item) => (
-            <div
-              key={item.id}
-              onClick={() => setActiveItem(item)}
-              className="group cursor-pointer bg-black-800 border border-gold-deep/20 rounded-2xl overflow-hidden
-                transition-all duration-300 hover:border-gold-mid hover:shadow-[0_0_24px_rgba(212,175,55,0.1)] flex flex-col"
-            >
-              {/* Photo placeholder area */}
-              <div className="aspect-[4/3] bg-black-900 border-b border-gold-deep/10 relative flex items-center justify-center overflow-hidden p-6">
-                <div className="absolute inset-0 bg-gradient-to-t from-black-950/80 via-transparent to-transparent opacity-60 group-hover:opacity-40 transition-opacity" />
-                <div className="w-12 h-12 rounded-full bg-gold-mid/10 border border-gold-mid/30 flex items-center justify-center text-gold-mid group-hover:scale-110 transition-transform">
-                  <svg className="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
-                  </svg>
+        {loading ? (
+          <div className="py-20 text-center text-gray-400 font-kicker text-sm tracking-widest uppercase">
+            Loading gallery moments...
+          </div>
+        ) : (
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+            {filteredItems.map((item) => (
+              <div
+                key={item.id}
+                onClick={() => setActiveItem(item)}
+                className="group cursor-pointer bg-black-800 border border-gold-deep/20 rounded-2xl overflow-hidden
+                  transition-all duration-300 hover:border-gold-mid hover:shadow-[0_0_24px_rgba(212,175,55,0.1)] flex flex-col"
+              >
+                {/* Photo placeholder area */}
+                <div className="aspect-[4/3] bg-black-900 border-b border-gold-deep/10 relative flex items-center justify-center overflow-hidden p-6">
+                  <div className="absolute inset-0 bg-gradient-to-t from-black-950/80 via-transparent to-transparent opacity-60 group-hover:opacity-40 transition-opacity" />
+                  <div className="w-12 h-12 rounded-full bg-gold-mid/10 border border-gold-mid/30 flex items-center justify-center text-gold-mid group-hover:scale-110 transition-transform">
+                    <svg className="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
+                    </svg>
+                  </div>
+                  <span className="absolute bottom-3 left-3 text-[10px] font-kicker uppercase tracking-widest text-gold-mid bg-black-950/80 px-2.5 py-1 rounded-full border border-gold-deep/20">
+                    {item.category}
+                  </span>
                 </div>
-                <span className="absolute bottom-3 left-3 text-[10px] font-kicker uppercase tracking-widest text-gold-mid bg-black-950/80 px-2.5 py-1 rounded-full border border-gold-deep/20">
-                  {item.category}
-                </span>
-              </div>
 
-              {/* Caption */}
-              <div className="p-5 flex-1 flex flex-col justify-between">
-                <div>
-                  <h3 className="font-display text-lg font-bold text-white group-hover:text-gold-light transition-colors mb-1">
-                    {item.title}
-                  </h3>
-                  {item.caption && (
-                    <p className="text-gray-400 text-xs md:text-sm leading-relaxed">
-                      {item.caption}
-                    </p>
-                  )}
-                </div>
-                <div className="mt-4 pt-3 border-t border-gold-deep/10 text-[11px] font-kicker uppercase tracking-wider text-gold-mid/70 group-hover:text-gold-mid flex items-center gap-1">
-                  <span>View moment</span>
-                  <span>→</span>
+                {/* Caption */}
+                <div className="p-5 flex-1 flex flex-col justify-between">
+                  <div>
+                    <h3 className="font-display text-lg font-bold text-white group-hover:text-gold-light transition-colors mb-1">
+                      {item.title}
+                    </h3>
+                    {item.caption && (
+                      <p className="text-gray-400 text-xs md:text-sm leading-relaxed">
+                        {item.caption}
+                      </p>
+                    )}
+                  </div>
+                  <div className="mt-4 pt-3 border-t border-gold-deep/10 text-[11px] font-kicker uppercase tracking-wider text-gold-mid/70 group-hover:text-gold-mid flex items-center gap-1">
+                    <span>View moment</span>
+                    <span>→</span>
+                  </div>
                 </div>
               </div>
-            </div>
-          ))}
-        </div>
+            ))}
+          </div>
+        )}
 
         {/* ═══════════════════════════════════════════════════════
             LIGHTBOX MODAL

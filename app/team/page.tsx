@@ -7,7 +7,7 @@ import KickerLabel from "@/components/KickerLabel";
 import SectionHeading from "@/components/SectionHeading";
 import TeamCard from "@/components/TeamCard";
 import Button from "@/components/Button";
-import { coreTeamMembers } from "@/data/team";
+import { getTeamMembers } from "@/lib/data-service";
 import { JOIN_FORM_URL } from "@/data/links";
 
 export const metadata = {
@@ -16,7 +16,11 @@ export const metadata = {
     "Meet the students behind ASTITVA — GLBITM's fresher community.",
 };
 
-export default function TeamPage() {
+export const revalidate = 0; // Dynamic data
+
+export default async function TeamPage() {
+  const teamMembers = await getTeamMembers();
+
   return (
     <div className="pt-28 pb-20 md:py-36 bg-black-950 min-h-screen">
       <div className="max-w-[1200px] mx-auto px-4 md:px-6 lg:px-8">
@@ -39,8 +43,8 @@ export default function TeamPage() {
             CORE TEAM GRID — content.md §4 Core Team
             ═══════════════════════════════════════════════════════ */}
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 mb-20 md:mb-28">
-          {coreTeamMembers.map((member) => (
-            <TeamCard key={member.name} member={member} />
+          {teamMembers.map((member) => (
+            <TeamCard key={member.id || member.name} member={member} />
           ))}
         </div>
 

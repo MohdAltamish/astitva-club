@@ -1,13 +1,13 @@
 /**
  * Events Page — copy verbatim from content.md §5.
- * Sections: Hero, Upcoming Events (empty state), Past Events (moments cards).
+ * Sections: Hero, Upcoming Events (empty state or live list), Past Events (moments cards).
  */
 
 import KickerLabel from "@/components/KickerLabel";
 import SectionHeading from "@/components/SectionHeading";
 import Button from "@/components/Button";
 import MomentsCard from "@/components/MomentsCard";
-import { homeMomentsPreviews } from "@/data/events";
+import { getEvents } from "@/lib/data-service";
 import { JOIN_FORM_URL } from "@/data/links";
 
 export const metadata = {
@@ -16,10 +16,16 @@ export const metadata = {
     "Discover upcoming and past events by ASTITVA — GLBITM's fresher community.",
 };
 
+export const revalidate = 0;
+
 const WHATSAPP_COMMUNITY_URL =
   "https://chat.whatsapp.com/CsfmyiQDve3LJZtzc6swTP?mode=gi_t";
 
-export default function EventsPage() {
+export default async function EventsPage() {
+  const allEvents = await getEvents();
+  const upcomingEvents = allEvents.filter((e) => e.type === "upcoming");
+  const pastEvents = allEvents.filter((e) => e.type === "past");
+
   return (
     <div className="pt-28 pb-20 md:py-36 bg-black-950 min-h-screen">
       <div className="max-w-[1200px] mx-auto px-4 md:px-6 lg:px-8 space-y-24 md:space-y-32">
@@ -40,36 +46,58 @@ export default function EventsPage() {
         </div>
 
         {/* ═══════════════════════════════════════════════════════
-            UPCOMING EVENTS — content.md §5 Upcoming Events (empty state)
+            UPCOMING EVENTS — content.md §5 Upcoming Events
             ═══════════════════════════════════════════════════════ */}
-        <section className="bg-black-800 border border-gold-deep/20 rounded-3xl p-8 md:p-14 text-center relative overflow-hidden">
-          <div
-            className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[500px] h-[500px] rounded-full opacity-10 pointer-events-none"
-            style={{
-              background:
-                "radial-gradient(circle, rgba(255,169,77,0.4) 0%, transparent 70%)",
-            }}
-            aria-hidden="true"
-          />
-          <div className="relative z-10 max-w-2xl mx-auto">
-            <KickerLabel>UPCOMING EXPERIENCES</KickerLabel>
-            <h2 className="font-display text-2xl md:text-3xl lg:text-4xl font-bold text-white mb-4 leading-tight">
-              First events coming soon.
-            </h2>
-            <p className="text-gray-400 text-sm md:text-base leading-relaxed mb-8">
-              We&apos;re planning the first Astitva experiences of the year.
-              Follow <a href="https://www.instagram.com/astitva_club/" target="_blank" rel="noopener noreferrer" className="text-gold-mid hover:underline">@astitva_club</a> on
-              Instagram or join the WhatsApp community so you don&apos;t miss the
-              announcement.
-            </p>
-            <Button
-              href={WHATSAPP_COMMUNITY_URL}
-              variant="primary"
-            >
-              Join the WhatsApp Community
-            </Button>
+        {upcomingEvents.length > 0 ? (
+          <div>
+            <div className="mb-10 text-center md:text-left">
+              <KickerLabel>NEXT EXPERIENCES</KickerLabel>
+              <SectionHeading
+                lineOne="Upcoming"
+                lineTwo="events &amp; gatherings."
+              />
+            </div>
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-6 md:gap-8">
+              {upcomingEvents.map((ev) => (
+                <MomentsCard
+                  key={ev.id}
+                  title={ev.title}
+                  tagline={ev.tagline}
+                  date={ev.date}
+                />
+              ))}
+            </div>
           </div>
-        </section>
+        ) : (
+          <section className="bg-black-800 border border-gold-deep/20 rounded-3xl p-8 md:p-14 text-center relative overflow-hidden">
+            <div
+              className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[500px] h-[500px] rounded-full opacity-10 pointer-events-none"
+              style={{
+                background:
+                  "radial-gradient(circle, rgba(255,169,77,0.4) 0%, transparent 70%)",
+              }}
+              aria-hidden="true"
+            />
+            <div className="relative z-10 max-w-2xl mx-auto">
+              <KickerLabel>UPCOMING EXPERIENCES</KickerLabel>
+              <h2 className="font-display text-2xl md:text-3xl lg:text-4xl font-bold text-white mb-4 leading-tight">
+                First events coming soon.
+              </h2>
+              <p className="text-gray-400 text-sm md:text-base leading-relaxed mb-8">
+                We&apos;re planning the first Astitva experiences of the year.
+                Follow <a href="https://www.instagram.com/astitva_club/" target="_blank" rel="noopener noreferrer" className="text-gold-mid hover:underline">@astitva_club</a> on
+                Instagram or join the WhatsApp community so you don&apos;t miss the
+                announcement.
+              </p>
+              <Button
+                href={WHATSAPP_COMMUNITY_URL}
+                variant="primary"
+              >
+                Join the WhatsApp Community
+              </Button>
+            </div>
+          </section>
+        )}
 
         {/* ═══════════════════════════════════════════════════════
             PAST EVENTS / MOMENTS PREVIEW — content.md §5 Past Events
@@ -84,11 +112,12 @@ export default function EventsPage() {
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6 md:gap-8">
-            {homeMomentsPreviews.map((moment) => (
+            {pastEvents.map((moment) => (
               <MomentsCard
-                key={moment.title}
+                key={moment.id}
                 title={moment.title}
                 tagline={moment.tagline}
+                date={moment.date}
               />
             ))}
           </div>
