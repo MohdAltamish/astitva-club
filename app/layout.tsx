@@ -36,15 +36,24 @@ export const metadata: Metadata = {
   title: "ASTITVA | GLBITM Fresher Community",
   description:
     "Astitva is GLBITM's fresher community — a space to discover who you are, connect with your people, and evolve together. Batch 2026.",
+  icons: {
+    icon: "/logo.png",
+    apple: "/logo.png",
+  },
   openGraph: {
     title: "ASTITVA | GLBITM Fresher Community",
     description:
       "Astitva is GLBITM's fresher community — a space to discover who you are, connect with your people, and evolve together. Batch 2026.",
     type: "website",
+    images: ["/logo.png"],
   },
 };
 
-export default function RootLayout({ children }: LayoutProps<"/">) {
+export default function RootLayout({
+  children,
+}: {
+  children: React.ReactNode;
+}) {
   return (
     <html
       lang="en"

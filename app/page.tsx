@@ -8,6 +8,7 @@
  * - Final CTA banner
  */
 
+import Image from "next/image";
 import KickerLabel from "@/components/KickerLabel";
 import SectionHeading from "@/components/SectionHeading";
 import Button from "@/components/Button";
@@ -107,7 +108,21 @@ export default async function HomePage() {
           aria-hidden="true"
         />
 
-        <div className="relative z-10 max-w-[1200px] mx-auto px-4 md:px-6 lg:px-8 text-center py-32 md:py-40">
+        <div className="relative z-10 max-w-[1200px] mx-auto px-4 md:px-6 lg:px-8 text-center py-28 md:py-36">
+          {/* Official Emblem */}
+          <div className="flex justify-center mb-6">
+            <div className="relative p-1 rounded-full bg-gradient-to-tr from-gold-deep via-gold-mid to-gold-light shadow-[0_0_35px_rgba(212,175,55,0.35)] hover:scale-105 transition-transform duration-500">
+              <Image
+                src="/logo.png"
+                alt="ASTITVA Official Emblem"
+                width={88}
+                height={88}
+                className="rounded-full object-cover bg-black-950"
+                priority
+              />
+            </div>
+          </div>
+
           {/* Kicker */}
           <KickerLabel className="mb-6">
             DISCOVER &middot; CONNECT &middot; EVOLVE

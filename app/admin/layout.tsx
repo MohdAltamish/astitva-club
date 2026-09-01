@@ -1,6 +1,7 @@
 "use client";
 
 import Link from "next/link";
+import Image from "next/image";
 import { usePathname } from "next/navigation";
 import { useAuth } from "@/context/AuthContext";
 import ProtectedRoute from "@/components/admin/ProtectedRoute";
@@ -33,9 +34,15 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
             {/* Logo / Brand */}
             <div className="p-6 border-b border-gold-deep/15 flex items-center justify-between">
               <Link href="/admin" className="flex items-center gap-3">
-                <span className="w-8 h-8 rounded-lg bg-gold-mid/10 border border-gold-mid/40 flex items-center justify-center text-gold-mid font-display font-bold">
-                  A
-                </span>
+                <div className="p-0.5 rounded-full bg-gradient-to-tr from-gold-deep via-gold-mid to-gold-light shadow-[0_0_12px_rgba(212,175,55,0.25)]">
+                  <Image
+                    src="/logo.png"
+                    alt="ASTITVA Official Emblem"
+                    width={32}
+                    height={32}
+                    className="rounded-full object-cover bg-black-950"
+                  />
+                </div>
                 <div>
                   <h1 className="font-display font-bold text-white text-sm tracking-wider">
                     ASTITVA

@@ -3,6 +3,7 @@
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
+import Image from "next/image";
 import { useAuth } from "@/context/AuthContext";
 import KickerLabel from "@/components/KickerLabel";
 
@@ -62,7 +63,16 @@ export default function AdminLoginPage() {
       <div className="max-w-md w-full bg-black-900 border border-gold-deep/30 rounded-3xl p-8 md:p-10 relative z-10 shadow-[0_0_50px_rgba(212,175,55,0.08)]">
         {/* Header */}
         <div className="text-center mb-8">
-          <Link href="/" className="inline-block mb-3">
+          <Link href="/" className="inline-flex flex-col items-center mb-3 group">
+            <div className="p-1 rounded-full bg-gradient-to-tr from-gold-deep via-gold-mid to-gold-light shadow-[0_0_20px_rgba(212,175,55,0.3)] group-hover:scale-105 transition-transform duration-300 mb-2">
+              <Image
+                src="/logo.png"
+                alt="ASTITVA Emblem"
+                width={52}
+                height={52}
+                className="rounded-full object-cover bg-black-950"
+              />
+            </div>
             <span className="font-display text-2xl md:text-3xl font-bold gold-gradient-text tracking-widest">
               ASTITVA
             </span>
