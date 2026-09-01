@@ -75,7 +75,10 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
 
   const signInWithEmail = async (email: string, pass: string) => {
     if (!auth) {
-      return { success: false, error: "Authentication service unavailable. Please check your configuration." };
+      return {
+        success: false,
+        error: "Firebase environment variables missing. Please ensure NEXT_PUBLIC_FIREBASE_API_KEY and related keys are configured in your Vercel Environment Variables.",
+      };
     }
 
     const cleanEmail = email.trim().toLowerCase();
@@ -119,7 +122,10 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
 
   const signInWithGoogle = async () => {
     if (!auth || !googleProvider) {
-      return { success: false, error: "Google authentication unavailable. Please check your configuration." };
+      return {
+        success: false,
+        error: "Firebase environment variables missing. Please ensure NEXT_PUBLIC_FIREBASE_API_KEY and related keys are configured in your Vercel Environment Variables.",
+      };
     }
 
     try {
