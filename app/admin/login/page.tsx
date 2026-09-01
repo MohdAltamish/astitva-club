@@ -7,13 +7,12 @@ import { useAuth } from "@/context/AuthContext";
 import KickerLabel from "@/components/KickerLabel";
 
 export default function AdminLoginPage() {
-  const [isSignUpMode, setIsSignUpMode] = useState(false);
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
-  const { signInWithEmail, signUpWithEmail, signInWithGoogle, loginAsDemoAdmin, isConfigured } = useAuth();
+  const { signInWithEmail, signInWithGoogle, loginAsDemoAdmin, isConfigured } = useAuth();
   const router = useRouter();
 
   const handleFormSubmit = async (e: React.FormEvent) => {
@@ -21,10 +20,7 @@ export default function AdminLoginPage() {
     setLoading(true);
     setError(null);
 
-    const res = isSignUpMode
-      ? await signUpWithEmail(email, password)
-      : await signInWithEmail(email, password);
-
+    const res = await signInWithEmail(email, password);
     setLoading(false);
 
     if (res.success) {
@@ -65,7 +61,7 @@ export default function AdminLoginPage() {
 
       <div className="max-w-md w-full bg-black-900 border border-gold-deep/30 rounded-3xl p-8 md:p-10 relative z-10 shadow-[0_0_50px_rgba(212,175,55,0.08)]">
         {/* Header */}
-        <div className="text-center mb-6">
+        <div className="text-center mb-8">
           <Link href="/" className="inline-block mb-3">
             <span className="font-display text-2xl md:text-3xl font-bold gold-gradient-text tracking-widest">
               ASTITVA
@@ -73,48 +69,14 @@ export default function AdminLoginPage() {
           </Link>
           <KickerLabel>CONTROL CENTER</KickerLabel>
           <h2 className="font-display text-xl md:text-2xl font-bold text-white mt-2">
-            {isSignUpMode ? "Create Admin Account" : "Admin Authentication"}
+            Admin Authentication
           </h2>
           <p className="text-gray-400 text-xs mt-1">
-            {isSignUpMode
-              ? "Register a new admin user in your Firebase project."
-              : "Sign in to manage team, events, gallery, and live site content."}
+            Restricted to verified ASTITVA administrators.
           </p>
         </div>
 
-        {/* Tab Switcher (Sign In vs Register) */}
-        <div className="flex bg-black-950 p-1 rounded-xl border border-gold-deep/20 mb-6">
-          <button
-            type="button"
-            onClick={() => {
-              setIsSignUpMode(false);
-              setError(null);
-            }}
-            className={`flex-1 py-2 text-xs font-kicker uppercase tracking-wider rounded-lg transition-all cursor-pointer ${
-              !isSignUpMode
-                ? "bg-gold-mid text-black-950 font-bold"
-                : "text-gray-400 hover:text-white"
-            }`}
-          >
-            Sign In
-          </button>
-          <button
-            type="button"
-            onClick={() => {
-              setIsSignUpMode(true);
-              setError(null);
-            }}
-            className={`flex-1 py-2 text-xs font-kicker uppercase tracking-wider rounded-lg transition-all cursor-pointer ${
-              isSignUpMode
-                ? "bg-gold-mid text-black-950 font-bold"
-                : "text-gray-400 hover:text-white"
-            }`}
-          >
-            Register New Admin
-          </button>
-        </div>
-
-        {/* Status notice */}
+        {/* Status notice if not configured */}
         {!isConfigured && (
           <div className="mb-6 p-4 rounded-xl bg-amber-500/10 border border-amber-500/30 text-xs text-amber-200">
             <p className="font-semibold mb-1">⚡ Setup / Demo Mode Active</p>
@@ -141,19 +103,18 @@ export default function AdminLoginPage() {
               required
               value={email}
               onChange={(e) => setEmail(e.target.value)}
-              placeholder="admin@astitva.club"
+              placeholder="altamish6589@gmail.com"
               className="w-full bg-black-950 border border-gold-deep/20 rounded-xl px-4 py-3 text-sm text-white focus:outline-none focus:border-gold-mid transition-colors placeholder:text-gray-600"
             />
           </div>
 
           <div>
             <label className="block text-xs font-kicker uppercase tracking-widest text-gray-400 mb-1.5">
-              Password (min 6 characters)
+              Password
             </label>
             <input
               type="password"
               required
-              minLength={6}
               value={password}
               onChange={(e) => setPassword(e.target.value)}
               placeholder="••••••••"
@@ -166,11 +127,7 @@ export default function AdminLoginPage() {
             disabled={loading}
             className="w-full py-3.5 rounded-xl text-sm font-semibold tracking-wide gold-gradient-bg text-black-950 hover:shadow-[0_0_20px_rgba(212,175,55,0.4)] transition-all duration-300 cursor-pointer disabled:opacity-50 mt-2"
           >
-            {loading
-              ? "Processing..."
-              : isSignUpMode
-              ? "Create Admin Account"
-              : "Sign in with Email"}
+            {loading ? "Authenticating..." : "Sign in with Email"}
           </button>
         </form>
 
