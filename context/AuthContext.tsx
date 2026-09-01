@@ -4,6 +4,7 @@ import React, { createContext, useContext, useEffect, useState } from "react";
 import {
   User,
   signInWithEmailAndPassword,
+  createUserWithEmailAndPassword,
   signInWithPopup,
   signOut,
   onAuthStateChanged,
@@ -16,6 +17,7 @@ interface AuthContextType {
   isConfigured: boolean;
   isDemoUser: boolean;
   signInWithEmail: (email: string, pass: string) => Promise<{ success: boolean; error?: string }>;
+  signUpWithEmail: (email: string, pass: string) => Promise<{ success: boolean; error?: string }>;
   signInWithGoogle: () => Promise<{ success: boolean; error?: string }>;
   loginAsDemoAdmin: () => void;
   signOutUser: () => Promise<void>;
@@ -27,6 +29,7 @@ const AuthContext = createContext<AuthContextType>({
   isConfigured: false,
   isDemoUser: false,
   signInWithEmail: async () => ({ success: false }),
+  signUpWithEmail: async () => ({ success: false }),
   signInWithGoogle: async () => ({ success: false }),
   loginAsDemoAdmin: () => {},
   signOutUser: async () => {},
@@ -70,7 +73,46 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
       sessionStorage.removeItem("astitva-demo-admin");
       return { success: true };
     } catch (err: unknown) {
-      return { success: false, error: err instanceof Error ? err.message : "Failed to sign in" };
+      let message = "Failed to sign in";
+      if (err instanceof Error) {
+        if (err.message.includes("auth/invalid-credential") || err.message.includes("auth/wrong-password") || err.message.includes("auth/user-not-found")) {
+          message = "Incorrect password or account not found. Click 'Register / Sign Up' below to create this account in Firebase.";
+        } else if (err.message.includes("auth/operation-not-allowed")) {
+          message = "Email/Password sign-in is not enabled in Firebase Console > Authentication > Sign-in method.";
+        } else if (err.message.includes("auth/too-many-requests")) {
+          message = "Access temporarily blocked due to many failed attempts. Try again in a few minutes or use Demo Quick Access.";
+        } else {
+          message = err.message;
+        }
+      }
+      return { success: false, error: message };
+    }
+  };
+
+  const signUpWithEmail = async (email: string, pass: string) => {
+    if (!isFirebaseConfigured || !auth) {
+      return { success: false, error: "Firebase is not configured in .env.local yet." };
+    }
+
+    try {
+      await createUserWithEmailAndPassword(auth, email, pass);
+      setIsDemoUser(false);
+      sessionStorage.removeItem("astitva-demo-admin");
+      return { success: true };
+    } catch (err: unknown) {
+      let message = "Failed to register";
+      if (err instanceof Error) {
+        if (err.message.includes("auth/email-already-in-use")) {
+          message = "An account with this email already exists. Please Sign In.";
+        } else if (err.message.includes("auth/weak-password")) {
+          message = "Password should be at least 6 characters.";
+        } else if (err.message.includes("auth/operation-not-allowed")) {
+          message = "Email/Password provider is disabled. Go to Firebase Console > Authentication > Sign-in method > Enable Email/Password.";
+        } else {
+          message = err.message;
+        }
+      }
+      return { success: false, error: message };
     }
   };
 
@@ -85,7 +127,7 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
       sessionStorage.removeItem("astitva-demo-admin");
       return { success: true };
     } catch (err: unknown) {
-      return { success: false, error: err instanceof Error ? err.message : "Google sign-in failed" };
+      return { success: false, error: err instanceof Error ? err.message : "Google sign-in failed. Ensure Google is enabled in Firebase Console > Authentication > Sign-in method." };
     }
   };
 
@@ -113,6 +155,7 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
         isConfigured: isFirebaseConfigured,
         isDemoUser,
         signInWithEmail,
+        signUpWithEmail,
         signInWithGoogle,
         loginAsDemoAdmin,
         signOutUser,

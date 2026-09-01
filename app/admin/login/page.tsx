@@ -7,20 +7,24 @@ import { useAuth } from "@/context/AuthContext";
 import KickerLabel from "@/components/KickerLabel";
 
 export default function AdminLoginPage() {
+  const [isSignUpMode, setIsSignUpMode] = useState(false);
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
-  const { signInWithEmail, signInWithGoogle, loginAsDemoAdmin, isConfigured } = useAuth();
+  const { signInWithEmail, signUpWithEmail, signInWithGoogle, loginAsDemoAdmin, isConfigured } = useAuth();
   const router = useRouter();
 
-  const handleEmailSubmit = async (e: React.FormEvent) => {
+  const handleFormSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setLoading(true);
     setError(null);
 
-    const res = await signInWithEmail(email, password);
+    const res = isSignUpMode
+      ? await signUpWithEmail(email, password)
+      : await signInWithEmail(email, password);
+
     setLoading(false);
 
     if (res.success) {
@@ -61,7 +65,7 @@ export default function AdminLoginPage() {
 
       <div className="max-w-md w-full bg-black-900 border border-gold-deep/30 rounded-3xl p-8 md:p-10 relative z-10 shadow-[0_0_50px_rgba(212,175,55,0.08)]">
         {/* Header */}
-        <div className="text-center mb-8">
+        <div className="text-center mb-6">
           <Link href="/" className="inline-block mb-3">
             <span className="font-display text-2xl md:text-3xl font-bold gold-gradient-text tracking-widest">
               ASTITVA
@@ -69,11 +73,45 @@ export default function AdminLoginPage() {
           </Link>
           <KickerLabel>CONTROL CENTER</KickerLabel>
           <h2 className="font-display text-xl md:text-2xl font-bold text-white mt-2">
-            Admin Authentication
+            {isSignUpMode ? "Create Admin Account" : "Admin Authentication"}
           </h2>
           <p className="text-gray-400 text-xs mt-1">
-            Sign in to manage team, events, gallery, and live site content.
+            {isSignUpMode
+              ? "Register a new admin user in your Firebase project."
+              : "Sign in to manage team, events, gallery, and live site content."}
           </p>
+        </div>
+
+        {/* Tab Switcher (Sign In vs Register) */}
+        <div className="flex bg-black-950 p-1 rounded-xl border border-gold-deep/20 mb-6">
+          <button
+            type="button"
+            onClick={() => {
+              setIsSignUpMode(false);
+              setError(null);
+            }}
+            className={`flex-1 py-2 text-xs font-kicker uppercase tracking-wider rounded-lg transition-all cursor-pointer ${
+              !isSignUpMode
+                ? "bg-gold-mid text-black-950 font-bold"
+                : "text-gray-400 hover:text-white"
+            }`}
+          >
+            Sign In
+          </button>
+          <button
+            type="button"
+            onClick={() => {
+              setIsSignUpMode(true);
+              setError(null);
+            }}
+            className={`flex-1 py-2 text-xs font-kicker uppercase tracking-wider rounded-lg transition-all cursor-pointer ${
+              isSignUpMode
+                ? "bg-gold-mid text-black-950 font-bold"
+                : "text-gray-400 hover:text-white"
+            }`}
+          >
+            Register New Admin
+          </button>
         </div>
 
         {/* Status notice */}
@@ -81,20 +119,19 @@ export default function AdminLoginPage() {
           <div className="mb-6 p-4 rounded-xl bg-amber-500/10 border border-amber-500/30 text-xs text-amber-200">
             <p className="font-semibold mb-1">⚡ Setup / Demo Mode Active</p>
             <p className="text-amber-300/80">
-              Firebase credentials not yet added to <code className="bg-black-950 px-1 py-0.5 rounded">.env.local</code>.
-              You can click <strong>Demo Quick Access</strong> below to access the full admin interface immediately.
+              Firebase credentials not yet detected. You can click <strong>Demo Quick Access</strong> below to access the full admin interface immediately.
             </p>
           </div>
         )}
 
         {error && (
-          <div className="mb-6 p-3.5 rounded-xl bg-red-500/10 border border-red-500/30 text-xs text-red-300">
+          <div className="mb-6 p-3.5 rounded-xl bg-red-500/10 border border-red-500/30 text-xs text-red-300 leading-relaxed">
             {error}
           </div>
         )}
 
         {/* Email Form */}
-        <form onSubmit={handleEmailSubmit} className="space-y-4">
+        <form onSubmit={handleFormSubmit} className="space-y-4">
           <div>
             <label className="block text-xs font-kicker uppercase tracking-widest text-gray-400 mb-1.5">
               Admin Email
@@ -111,11 +148,12 @@ export default function AdminLoginPage() {
 
           <div>
             <label className="block text-xs font-kicker uppercase tracking-widest text-gray-400 mb-1.5">
-              Password
+              Password (min 6 characters)
             </label>
             <input
               type="password"
               required
+              minLength={6}
               value={password}
               onChange={(e) => setPassword(e.target.value)}
               placeholder="••••••••"
@@ -128,7 +166,11 @@ export default function AdminLoginPage() {
             disabled={loading}
             className="w-full py-3.5 rounded-xl text-sm font-semibold tracking-wide gold-gradient-bg text-black-950 hover:shadow-[0_0_20px_rgba(212,175,55,0.4)] transition-all duration-300 cursor-pointer disabled:opacity-50 mt-2"
           >
-            {loading ? "Authenticating..." : "Sign in with Email"}
+            {loading
+              ? "Processing..."
+              : isSignUpMode
+              ? "Create Admin Account"
+              : "Sign in with Email"}
           </button>
         </form>
 
@@ -176,7 +218,7 @@ export default function AdminLoginPage() {
             onClick={handleDemoLogin}
             className="w-full py-2.5 px-4 rounded-xl text-xs font-kicker uppercase tracking-widest text-gold-mid bg-gold-mid/10 border border-gold-mid/30 hover:bg-gold-mid/20 transition-all cursor-pointer"
           >
-            ⚡ Demo Quick Access (Skip Auth)
+            ⚡ Demo Quick Access (Instant Bypass)
           </button>
         </div>
 
