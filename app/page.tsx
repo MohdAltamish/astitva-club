@@ -4,19 +4,16 @@
  * - About section details ("More than a club" + Vision)
  * - Our Ideology (3 Pillars: Discover, Connect, Evolve)
  * - The ASTITVA Journey (7 Stages Stepper)
- * - Interactive Team & Department Section
  * - Contact Block (Instagram, WhatsApp, Email, Campus)
  * - Final CTA banner
  */
 
-import Link from "next/link";
 import KickerLabel from "@/components/KickerLabel";
 import SectionHeading from "@/components/SectionHeading";
 import Button from "@/components/Button";
 import StarField from "@/components/StarField";
 import JourneyStepper from "@/components/JourneyStepper";
-import InteractiveTeamSection from "@/components/InteractiveTeamSection";
-import { getTeamMembers, getSiteSettings } from "@/lib/data-service";
+import { getSiteSettings } from "@/lib/data-service";
 import { visionContent } from "@/data/about";
 import { JOIN_FORM_URL } from "@/data/links";
 
@@ -42,10 +39,7 @@ const ideologyPillars = [
 ] as const;
 
 export default async function HomePage() {
-  const [teamMembers, settings] = await Promise.all([
-    getTeamMembers(),
-    getSiteSettings(),
-  ]);
+  const settings = await getSiteSettings();
 
   const joinUrl = settings.join_url || JOIN_FORM_URL;
   const whatsappUrl = settings.whatsapp_url || "https://chat.whatsapp.com/CsfmyiQDve3LJZtzc6swTP?mode=gi_t";
@@ -271,22 +265,9 @@ export default async function HomePage() {
       </section>
 
       {/* ═══════════════════════════════════════════════════════
-          5. INTERACTIVE TEAM & DEPARTMENTS SECTION
+          5. CONTACT BLOCK — Direct channels to reach out
           ═══════════════════════════════════════════════════════ */}
-      <section className="bg-black-950 py-20 md:py-28 border-t border-gold-deep/15">
-        <div className="max-w-[1200px] mx-auto px-4 md:px-6 lg:px-8">
-          <InteractiveTeamSection
-            initialMembers={teamMembers}
-            title="Meet the"
-            subtitle="people behind Astitva."
-          />
-        </div>
-      </section>
-
-      {/* ═══════════════════════════════════════════════════════
-          6. CONTACT BLOCK — Direct channels to reach out
-          ═══════════════════════════════════════════════════════ */}
-      <section id="contact" className="bg-black-800 py-20 md:py-28 border-t border-gold-deep/15 scroll-mt-16">
+      <section id="contact" className="bg-black-950 py-20 md:py-28 border-t border-gold-deep/15 scroll-mt-16">
         <div className="max-w-[1200px] mx-auto px-4 md:px-6 lg:px-8">
           <div className="text-center max-w-2xl mx-auto mb-14">
             <KickerLabel>GET IN TOUCH</KickerLabel>
@@ -303,7 +284,7 @@ export default async function HomePage() {
             {contactChannels.map((item) => (
               <div
                 key={item.title}
-                className="bg-black-900 border border-gold-deep/20 rounded-2xl p-8 flex flex-col justify-between transition-all duration-300 hover:border-gold-mid hover:shadow-[0_0_24px_rgba(212,175,55,0.1)]"
+                className="bg-black-800 border border-gold-deep/20 rounded-2xl p-8 flex flex-col justify-between transition-all duration-300 hover:border-gold-mid hover:shadow-[0_0_24px_rgba(212,175,55,0.1)]"
               >
                 <div>
                   <div className="w-12 h-12 rounded-xl bg-gold-mid/10 border border-gold-mid/30 flex items-center justify-center text-gold-mid mb-5">
@@ -334,7 +315,7 @@ export default async function HomePage() {
           </div>
 
           {/* Campus Location Note */}
-          <div className="mt-10 p-6 bg-black-900/60 border border-gold-deep/15 rounded-2xl flex flex-col sm:flex-row items-center justify-between gap-4 text-center sm:text-left">
+          <div className="mt-10 p-6 bg-black-800/60 border border-gold-deep/15 rounded-2xl flex flex-col sm:flex-row items-center justify-between gap-4 text-center sm:text-left">
             <div className="flex items-center gap-3">
               <span className="text-gold-mid text-xl">📍</span>
               <div>
@@ -350,9 +331,9 @@ export default async function HomePage() {
       </section>
 
       {/* ═══════════════════════════════════════════════════════
-          7. FINAL CTA BANNER — content.md §2 Final CTA banner
+          6. FINAL CTA BANNER — content.md §2 Final CTA banner
           ═══════════════════════════════════════════════════════ */}
-      <section className="relative bg-black-950 py-20 md:py-28 overflow-hidden border-t border-gold-deep/15">
+      <section className="relative bg-black-800 py-20 md:py-28 overflow-hidden border-t border-gold-deep/15">
         {/* Ambient glow */}
         <div
           className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[500px] h-[500px] rounded-full opacity-10 pointer-events-none"
