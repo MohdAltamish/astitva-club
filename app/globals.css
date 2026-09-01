@@ -1,26 +1,101 @@
 @import "tailwindcss";
 
-:root {
-  --background: #ffffff;
-  --foreground: #171717;
-}
+/* ──────────────────────────────────────────────────────────
+   ASTITVA Design Tokens
+   Source of truth: design.md §2 (colors), §3 (typography), §5 (spacing)
+   ────────────────────────────────────────────────────────── */
 
 @theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
+  /* ── Colors (design.md §2) ── */
+  --color-black-950: #000000;
+  --color-black-800: #141210;
+  --color-gold-light: #F3D98B;
+  --color-gold-mid: #D4AF37;
+  --color-gold-deep: #9C7A24;
+  --color-glow-amber: #FFA94D;
+  --color-white: #FFFFFF;
+  --color-gray-400: #9A9A9A;
+
+  /* ── Typography (design.md §3) ── */
+  --font-display: "Playfair Display", serif;
+  --font-kicker: "Cormorant SC", serif;
+  --font-body: "Inter", sans-serif;
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
+/* ── Base styles ── */
+body {
+  background: var(--color-black-950);
+  color: var(--color-white);
+  font-family: var(--font-body);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* ── Gold metallic gradient (design.md §2 gradient reference) ── */
+.gold-gradient-text {
+  background: linear-gradient(135deg, var(--color-gold-light), var(--color-gold-mid), var(--color-gold-deep));
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+.gold-gradient-bg {
+  background: linear-gradient(135deg, var(--color-gold-light), var(--color-gold-mid), var(--color-gold-deep));
+}
+
+/* ── Star-field twinkle animation (design.md §7) ── */
+@keyframes twinkle {
+  0%, 100% { opacity: 0.3; }
+  50% { opacity: 0.8; }
+}
+
+@keyframes float-up {
+  from {
+    opacity: 0;
+    transform: translateY(24px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
   }
 }
 
-body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+/* Section reveal on scroll */
+.animate-fade-up {
+  animation: float-up 0.6s ease-out both;
+}
+
+/* ── Respect prefers-reduced-motion (design.md §7) ── */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}
+
+/* ── Selection colors ── */
+::selection {
+  background: var(--color-gold-mid);
+  color: var(--color-black-950);
+}
+
+/* ── Scrollbar (subtle gold accent) ── */
+::-webkit-scrollbar {
+  width: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: var(--color-black-950);
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--color-gold-deep);
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: var(--color-gold-mid);
 }
