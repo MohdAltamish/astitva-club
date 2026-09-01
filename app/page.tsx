@@ -2,7 +2,7 @@
  * Home Page — features:
  * - Hero section
  * - About section details ("More than a club" + Vision)
- * - Our Ideology (3 Pillars: Discover, Connect, Evolve)
+ * - Our Ideology (3 Pillars: Discover, Connect, Evolve) & Core Philosophy (A-S-T-I-T-V-A)
  * - The ASTITVA Journey (7 Stages Stepper)
  * - Contact Block (Instagram, WhatsApp, Email, Campus)
  * - Final CTA banner
@@ -15,7 +15,7 @@ import Button from "@/components/Button";
 import StarField from "@/components/StarField";
 import JourneyStepper from "@/components/JourneyStepper";
 import { getSiteSettings } from "@/lib/data-service";
-import { visionContent } from "@/data/about";
+import { visionContent, astitvaPrinciples } from "@/data/about";
 import { JOIN_FORM_URL } from "@/data/links";
 
 export const revalidate = 0;
@@ -228,13 +228,14 @@ export default async function HomePage() {
       </section>
 
       {/* ═══════════════════════════════════════════════════════
-          3. OUR IDEOLOGY — content.md §2 (Discover, Connect, Evolve)
+          3. OUR IDEOLOGY & CORE PHILOSOPHY
           ═══════════════════════════════════════════════════════ */}
-      <section className="bg-black-950 py-20 md:py-28">
+      <section className="bg-black-950 py-20 md:py-28 border-t border-gold-deep/15">
         <div className="max-w-[1200px] mx-auto px-4 md:px-6 lg:px-8">
           <KickerLabel>OUR IDEOLOGY</KickerLabel>
           <SectionHeading lineOne="Discover. Connect." lineTwo="Evolve together." />
 
+          {/* 3 Pillars */}
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6 md:gap-8 mt-8">
             {ideologyPillars.map((pillar) => (
               <div
@@ -254,6 +255,48 @@ export default async function HomePage() {
                 </p>
               </div>
             ))}
+          </div>
+
+          {/* ═══════════════════════════════════════════════════
+              CORE PHILOSOPHY — A-S-T-I-T-V-A
+              ═══════════════════════════════════════════════════ */}
+          <div className="mt-20 pt-16 border-t border-gold-deep/15">
+            <div className="text-center max-w-2xl mx-auto mb-12">
+              <KickerLabel>CORE PHILOSOPHY</KickerLabel>
+              <h3 className="font-display text-2xl sm:text-3xl md:text-4xl font-bold text-white mt-1">
+                The DNA of <span className="gold-gradient-text">ASTITVA</span>
+              </h3>
+              <p className="text-gray-400 text-sm md:text-base mt-3 leading-relaxed">
+                Seven principles that shape every initiative, every meetup, and every connection we build.
+              </p>
+            </div>
+
+            {/* 7-Principles Responsive Flow */}
+            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-7 gap-4">
+              {astitvaPrinciples.map((item, index) => (
+                <div
+                  key={`${item.letter}-${index}`}
+                  className="group relative bg-black-900/90 border border-gold-deep/20 rounded-2xl p-5 flex flex-col items-center text-center transition-all duration-300 hover:border-gold-mid hover:shadow-[0_0_24px_rgba(212,175,55,0.15)] hover:-translate-y-1"
+                >
+                  {/* Glowing letter badge */}
+                  <div className="w-12 h-12 rounded-xl bg-black-950 border border-gold-mid/40 flex items-center justify-center font-display text-2xl font-bold gold-gradient-text shadow-[0_0_12px_rgba(212,175,55,0.2)] group-hover:scale-110 group-hover:border-gold-mid transition-all duration-300 mb-3">
+                    {item.letter}
+                  </div>
+
+                  {/* Word title */}
+                  <h4 className="font-display text-lg font-bold text-white group-hover:text-gold-light transition-colors mb-1">
+                    {item.word}
+                  </h4>
+
+                  <span className="text-gold-mid text-xs mb-2">→</span>
+
+                  {/* Description */}
+                  <p className="text-gray-400 text-xs leading-relaxed font-sans">
+                    {item.description}
+                  </p>
+                </div>
+              ))}
+            </div>
           </div>
         </div>
       </section>
