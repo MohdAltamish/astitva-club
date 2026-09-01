@@ -34,12 +34,12 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
             {/* Logo / Brand */}
             <div className="p-6 border-b border-gold-deep/15 flex items-center justify-between">
               <Link href="/admin" className="flex items-center gap-3">
-                <div className="p-0.5 rounded-full bg-gradient-to-tr from-gold-deep via-gold-mid to-gold-light shadow-[0_0_12px_rgba(212,175,55,0.25)]">
+                <div className="p-1 rounded-full bg-gradient-to-tr from-gold-deep via-gold-mid to-gold-light shadow-[0_0_15px_rgba(212,175,55,0.3)]">
                   <Image
                     src="/logo.png"
                     alt="ASTITVA Official Emblem"
-                    width={32}
-                    height={32}
+                    width={40}
+                    height={40}
                     className="rounded-full object-cover bg-black-950"
                   />
                 </div>

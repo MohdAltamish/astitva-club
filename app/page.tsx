@@ -110,14 +110,14 @@ export default async function HomePage() {
 
         <div className="relative z-10 max-w-[1200px] mx-auto px-4 md:px-6 lg:px-8 text-center py-28 md:py-36">
           {/* Official Emblem */}
-          <div className="flex justify-center mb-6">
-            <div className="relative p-1 rounded-full bg-gradient-to-tr from-gold-deep via-gold-mid to-gold-light shadow-[0_0_35px_rgba(212,175,55,0.35)] hover:scale-105 transition-transform duration-500">
+          <div className="flex justify-center mb-8">
+            <div className="relative p-1.5 rounded-full bg-gradient-to-tr from-gold-deep via-gold-mid to-gold-light shadow-[0_0_45px_rgba(212,175,55,0.45)] hover:scale-105 transition-transform duration-500">
               <Image
                 src="/logo.png"
                 alt="ASTITVA Official Emblem"
-                width={88}
-                height={88}
-                className="rounded-full object-cover bg-black-950"
+                width={120}
+                height={120}
+                className="w-24 h-24 sm:w-28 sm:h-28 md:w-32 md:h-32 rounded-full object-cover bg-black-950"
                 priority
               />
             </div>

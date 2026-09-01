@@ -64,12 +64,12 @@ export default function AdminLoginPage() {
         {/* Header */}
         <div className="text-center mb-8">
           <Link href="/" className="inline-flex flex-col items-center mb-3 group">
-            <div className="p-1 rounded-full bg-gradient-to-tr from-gold-deep via-gold-mid to-gold-light shadow-[0_0_20px_rgba(212,175,55,0.3)] group-hover:scale-105 transition-transform duration-300 mb-2">
+            <div className="p-1.5 rounded-full bg-gradient-to-tr from-gold-deep via-gold-mid to-gold-light shadow-[0_0_28px_rgba(212,175,55,0.4)] group-hover:scale-105 transition-transform duration-300 mb-3">
               <Image
                 src="/logo.png"
                 alt="ASTITVA Emblem"
-                width={52}
-                height={52}
+                width={72}
+                height={72}
                 className="rounded-full object-cover bg-black-950"
               />
             </div>
