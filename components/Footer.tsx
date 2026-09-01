@@ -1,10 +1,7 @@
-/**
- * Footer — black-950 background, logo mark, nav links, social icons, tagline.
- * Copy verbatim from content.md §1 (Global).
- * Per design.md §6 footer spec.
- */
+"use client";
 
 import Link from "next/link";
+import { usePathname } from "next/navigation";
 import Logo from "./Logo";
 import { JOIN_FORM_URL } from "@/data/links";
 
@@ -49,6 +46,12 @@ const socialLinks = [
 ] as const;
 
 export default function Footer() {
+  const pathname = usePathname();
+
+  if (pathname?.startsWith("/admin")) {
+    return null;
+  }
+
   return (
     <footer className="bg-black-950 border-t border-gold-deep/20">
       <div className="max-w-[1200px] mx-auto px-4 md:px-6 lg:px-8 py-12 md:py-16">

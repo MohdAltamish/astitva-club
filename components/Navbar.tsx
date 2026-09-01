@@ -7,6 +7,7 @@
  */
 
 import { useState, useEffect } from "react";
+import { usePathname } from "next/navigation";
 import Link from "next/link";
 import Logo from "./Logo";
 import Button from "./Button";
@@ -21,8 +22,14 @@ const navLinks = [
 ] as const;
 
 export default function Navbar() {
+  const pathname = usePathname();
   const [scrolled, setScrolled] = useState(false);
   const [menuOpen, setMenuOpen] = useState(false);
+
+  // Do not render public navbar on admin pages
+  if (pathname?.startsWith("/admin")) {
+    return null;
+  }
 
   useEffect(() => {
     const handleScroll = () => setScrolled(window.scrollY > 40);
