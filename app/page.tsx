@@ -4,7 +4,7 @@
  * - About section details ("More than a club" + Vision)
  * - Our Ideology (3 Pillars: Discover, Connect, Evolve)
  * - The ASTITVA Journey (7 Stages Stepper)
- * - Team Section (Dynamic Core Team grid)
+ * - Interactive Team & Department Section
  * - Contact Block (Instagram, WhatsApp, Email, Campus)
  * - Final CTA banner
  */
@@ -14,8 +14,8 @@ import KickerLabel from "@/components/KickerLabel";
 import SectionHeading from "@/components/SectionHeading";
 import Button from "@/components/Button";
 import StarField from "@/components/StarField";
-import TeamCard from "@/components/TeamCard";
 import JourneyStepper from "@/components/JourneyStepper";
+import InteractiveTeamSection from "@/components/InteractiveTeamSection";
 import { getTeamMembers, getSiteSettings } from "@/lib/data-service";
 import { visionContent } from "@/data/about";
 import { JOIN_FORM_URL } from "@/data/links";
@@ -271,37 +271,15 @@ export default async function HomePage() {
       </section>
 
       {/* ═══════════════════════════════════════════════════════
-          5. TEAM SECTION — content.md §4 Core Team (Dynamic)
+          5. INTERACTIVE TEAM & DEPARTMENTS SECTION
           ═══════════════════════════════════════════════════════ */}
       <section className="bg-black-950 py-20 md:py-28 border-t border-gold-deep/15">
         <div className="max-w-[1200px] mx-auto px-4 md:px-6 lg:px-8">
-          <div className="text-center max-w-3xl mx-auto mb-16">
-            <KickerLabel>THE PEOPLE BEHIND IT</KickerLabel>
-            <SectionHeading
-              lineOne="Meet the"
-              lineTwo="core team."
-              className="mb-4"
-            />
-            <p className="text-gray-400 text-base md:text-lg leading-relaxed">
-              Astitva is built and run by students, for students. Here&apos;s who&apos;s behind it this year.
-            </p>
-          </div>
-
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 mb-12">
-            {teamMembers.map((member) => (
-              <TeamCard key={member.id || member.name} member={member} />
-            ))}
-          </div>
-
-          <div className="text-center">
-            <Link
-              href="/team"
-              className="text-gold-mid hover:text-gold-light transition-colors duration-200 text-sm md:text-base tracking-wide inline-flex items-center gap-2 font-kicker uppercase"
-            >
-              <span>View full team page &amp; details</span>
-              <span aria-hidden="true">→</span>
-            </Link>
-          </div>
+          <InteractiveTeamSection
+            initialMembers={teamMembers}
+            title="Meet the"
+            subtitle="people behind Astitva."
+          />
         </div>
       </section>
 

@@ -1,12 +1,13 @@
 /**
- * Team Page — copy verbatim from content.md §4.
- * Sections: Hero, Core Team grid, Join the team CTA.
+ * Team Page — features:
+ * - Interactive department & teams carousel
+ * - Filterable member showcase slider
+ * - Join the team CTA banner
  */
 
 import KickerLabel from "@/components/KickerLabel";
-import SectionHeading from "@/components/SectionHeading";
-import TeamCard from "@/components/TeamCard";
 import Button from "@/components/Button";
+import InteractiveTeamSection from "@/components/InteractiveTeamSection";
 import { getTeamMembers } from "@/lib/data-service";
 import { JOIN_FORM_URL } from "@/data/links";
 
@@ -23,35 +24,20 @@ export default async function TeamPage() {
 
   return (
     <div className="pt-28 pb-20 md:py-36 bg-black-950 min-h-screen">
-      <div className="max-w-[1200px] mx-auto px-4 md:px-6 lg:px-8">
+      <div className="max-w-[1200px] mx-auto px-4 md:px-6 lg:px-8 space-y-24 md:space-y-32">
         {/* ═══════════════════════════════════════════════════════
-            HERO — content.md §4 Hero
+            INTERACTIVE TEAM SHOWCASE
             ═══════════════════════════════════════════════════════ */}
-        <div className="text-center max-w-3xl mx-auto mb-16 md:mb-24">
-          <KickerLabel>THE PEOPLE BEHIND IT</KickerLabel>
-          <SectionHeading
-            lineOne="Meet the"
-            lineTwo="core team."
-            className="mb-4"
-          />
-          <p className="text-gray-400 text-base md:text-lg leading-relaxed">
-            Astitva is built and run by students, for students. Here&apos;s who&apos;s behind it this year.
-          </p>
-        </div>
-
-        {/* ═══════════════════════════════════════════════════════
-            CORE TEAM GRID — content.md §4 Core Team
-            ═══════════════════════════════════════════════════════ */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 mb-20 md:mb-28">
-          {teamMembers.map((member) => (
-            <TeamCard key={member.id || member.name} member={member} />
-          ))}
-        </div>
+        <InteractiveTeamSection
+          initialMembers={teamMembers}
+          title="Meet the"
+          subtitle="people behind Astitva."
+        />
 
         {/* ═══════════════════════════════════════════════════════
             JOIN THE TEAM — content.md §4 Join the team
             ═══════════════════════════════════════════════════════ */}
-        <section className="bg-black-800 border border-gold-deep/20 rounded-3xl p-8 md:p-14 text-center relative overflow-hidden">
+        <section className="bg-black-900 border border-gold-deep/20 rounded-3xl p-8 md:p-14 text-center relative overflow-hidden">
           <div
             className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[450px] h-[450px] rounded-full opacity-10 pointer-events-none"
             style={{
