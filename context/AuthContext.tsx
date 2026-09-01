@@ -55,12 +55,13 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
       return;
     }
 
-    const unsubscribe = onAuthStateChanged(auth, (currentUser) => {
+    const currentAuth = auth;
+    const unsubscribe = onAuthStateChanged(currentAuth, (currentUser) => {
       if (currentUser && currentUser.email) {
         if (isAuthorizedAdmin(currentUser.email)) {
           setUser(currentUser);
         } else {
-          signOut(auth);
+          signOut(currentAuth);
           setUser(null);
         }
       } else {
@@ -74,7 +75,7 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
 
   const signInWithEmail = async (email: string, pass: string) => {
     if (!auth) {
-      return { success: false, error: "Authentication service unavailable." };
+      return { success: false, error: "Authentication service unavailable. Please check your configuration." };
     }
 
     const cleanEmail = email.trim().toLowerCase();
@@ -118,7 +119,7 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
 
   const signInWithGoogle = async () => {
     if (!auth || !googleProvider) {
-      return { success: false, error: "Google authentication unavailable." };
+      return { success: false, error: "Google authentication unavailable. Please check your configuration." };
     }
 
     try {

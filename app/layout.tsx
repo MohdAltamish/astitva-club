@@ -6,7 +6,7 @@
 
 import type { Metadata } from "next";
 import { Playfair_Display, Cormorant_SC, Inter } from "next/font/google";
-import { Analytics } from "@vercel/analytics/next";
+import { Analytics } from "@vercel/analytics/react";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import { AuthProvider } from "@/context/AuthContext";

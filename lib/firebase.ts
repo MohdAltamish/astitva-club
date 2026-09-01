@@ -15,9 +15,9 @@ export const isFirebaseConfigured = Boolean(
   firebaseConfig.projectId
 );
 
-let app: FirebaseApp | undefined;
-let auth: Auth | undefined;
-let googleProvider: GoogleAuthProvider | undefined;
+let app: FirebaseApp | null = null;
+let auth: Auth | null = null;
+let googleProvider: GoogleAuthProvider | null = null;
 
 if (isFirebaseConfigured) {
   try {
