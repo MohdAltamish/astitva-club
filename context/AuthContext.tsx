@@ -12,11 +12,10 @@ import { auth, googleProvider, isFirebaseConfigured } from "@/lib/firebase";
 
 // Default authorized administrator emails
 const DEFAULT_ADMIN_EMAILS = [
-  "altamish6589@gmail.com",
   "astitvaclub26@gmail.com",
 ];
 
-// Load any additional authorized emails from environment variable
+// Load authorized admin emails from environment variable
 const envAdmins = process.env.NEXT_PUBLIC_ADMIN_EMAILS
   ? process.env.NEXT_PUBLIC_ADMIN_EMAILS.split(",").map((e) => e.trim().toLowerCase())
   : [];
@@ -27,7 +26,7 @@ const AUTHORIZED_ADMIN_EMAILS = Array.from(
 
 export const isAuthorizedAdmin = (email: string | null | undefined): boolean => {
   if (!email) return false;
-  // If no whitelist configured, allow; otherwise check strictly against authorized list
+  if (AUTHORIZED_ADMIN_EMAILS.length === 0) return true;
   return AUTHORIZED_ADMIN_EMAILS.includes(email.toLowerCase());
 };
 
@@ -74,11 +73,9 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
 
     const unsubscribe = onAuthStateChanged(auth, (currentUser) => {
       if (currentUser && currentUser.email) {
-        // Enforce admin email authorization
         if (isAuthorizedAdmin(currentUser.email)) {
           setUser(currentUser);
         } else {
-          // Reject unauthorized user and sign them out
           if (auth) signOut(auth);
           setUser(null);
         }
@@ -100,7 +97,7 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
     if (!isAuthorizedAdmin(cleanEmail)) {
       return {
         success: false,
-        error: `Access Denied: ${cleanEmail} is not authorized as an ASTITVA administrator.`,
+        error: "Access Denied: You are not authorized as an administrator.",
       };
     }
 
@@ -110,7 +107,7 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
         if (auth) await signOut(auth);
         return {
           success: false,
-          error: "Access Denied: Your account is not authorized as an ASTITVA administrator.",
+          error: "Access Denied: You are not authorized as an administrator.",
         };
       }
       setIsDemoUser(false);
@@ -125,10 +122,10 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
           err.message.includes("auth/user-not-found")
         ) {
           message =
-            "Incorrect password or user not found. Please ensure the user exists in Firebase Console > Authentication > Users.";
+            "Incorrect credentials. Please verify your email and password.";
         } else if (err.message.includes("auth/operation-not-allowed")) {
           message =
-            "Email/Password sign-in is not enabled in Firebase Console > Authentication > Sign-in method.";
+            "Email/Password sign-in is not enabled in Firebase Console.";
         } else if (err.message.includes("auth/too-many-requests")) {
           message = "Access temporarily blocked due to many failed attempts. Try again later.";
         } else {
@@ -150,7 +147,7 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
         if (auth) await signOut(auth);
         return {
           success: false,
-          error: `Access Denied: ${result.user.email} is not in the authorized admin list.`,
+          error: "Access Denied: Your account is not authorized as an administrator.",
         };
       }
       setIsDemoUser(false);
@@ -162,7 +159,7 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
         error:
           err instanceof Error
             ? err.message
-            : "Google sign-in failed. Ensure Google provider is enabled in Firebase Console.",
+            : "Google sign-in failed. Please try again.",
       };
     }
   };

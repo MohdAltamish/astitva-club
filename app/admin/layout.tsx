@@ -109,7 +109,7 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
             <div className="flex items-center justify-between pt-2">
               <div className="overflow-hidden pr-2">
                 <p className="text-xs font-semibold text-white truncate">
-                  {user?.displayName || (isDemoUser ? "Altamish (Demo)" : "Admin")}
+                  {user?.displayName || (isDemoUser ? "Administrator" : "Admin")}
                 </p>
                 <p className="text-[11px] text-gray-400 truncate">
                   {user?.email || "admin@astitva.club"}
