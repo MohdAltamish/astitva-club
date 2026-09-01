@@ -11,6 +11,7 @@ const adminNav = [
   { label: "Team Members", href: "/admin/team", icon: "👥" },
   { label: "Events", href: "/admin/events", icon: "📅" },
   { label: "Gallery", href: "/admin/gallery", icon: "🖼️" },
+  { label: "Backend & DB", href: "/admin/database", icon: "⚡" },
   { label: "Site Settings", href: "/admin/settings", icon: "⚙️" },
 ];
 
