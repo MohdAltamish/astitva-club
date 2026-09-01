@@ -8,14 +8,13 @@ import {
   signOut,
   onAuthStateChanged,
 } from "firebase/auth";
-import { auth, googleProvider, isFirebaseConfigured } from "@/lib/firebase";
+import { auth, googleProvider } from "@/lib/firebase";
 
-// Default authorized administrator emails
+// Authorized administrator emails
 const DEFAULT_ADMIN_EMAILS = [
   "astitvaclub26@gmail.com",
 ];
 
-// Load authorized admin emails from environment variable
 const envAdmins = process.env.NEXT_PUBLIC_ADMIN_EMAILS
   ? process.env.NEXT_PUBLIC_ADMIN_EMAILS.split(",").map((e) => e.trim().toLowerCase())
   : [];
@@ -33,40 +32,25 @@ export const isAuthorizedAdmin = (email: string | null | undefined): boolean => 
 interface AuthContextType {
   user: User | null;
   loading: boolean;
-  isConfigured: boolean;
-  isDemoUser: boolean;
   signInWithEmail: (email: string, pass: string) => Promise<{ success: boolean; error?: string }>;
   signInWithGoogle: () => Promise<{ success: boolean; error?: string }>;
-  loginAsDemoAdmin: () => void;
   signOutUser: () => Promise<void>;
 }
 
 const AuthContext = createContext<AuthContextType>({
   user: null,
   loading: true,
-  isConfigured: false,
-  isDemoUser: false,
   signInWithEmail: async () => ({ success: false }),
   signInWithGoogle: async () => ({ success: false }),
-  loginAsDemoAdmin: () => {},
   signOutUser: async () => {},
 });
 
 export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
   const [user, setUser] = useState<User | null>(null);
-  const [isDemoUser, setIsDemoUser] = useState(false);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    // Check if demo admin is stored in sessionStorage
-    const savedDemo = sessionStorage.getItem("astitva-demo-admin") === "1";
-    if (savedDemo) {
-      setIsDemoUser(true);
-      setLoading(false);
-      return;
-    }
-
-    if (!isFirebaseConfigured || !auth) {
+    if (!auth) {
       setLoading(false);
       return;
     }
@@ -76,7 +60,7 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
         if (isAuthorizedAdmin(currentUser.email)) {
           setUser(currentUser);
         } else {
-          if (auth) signOut(auth);
+          signOut(auth);
           setUser(null);
         }
       } else {
@@ -89,8 +73,8 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
   }, []);
 
   const signInWithEmail = async (email: string, pass: string) => {
-    if (!isFirebaseConfigured || !auth) {
-      return { success: false, error: "Firebase is not configured in .env.local yet." };
+    if (!auth) {
+      return { success: false, error: "Authentication service unavailable." };
     }
 
     const cleanEmail = email.trim().toLowerCase();
@@ -104,14 +88,12 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
     try {
       const cred = await signInWithEmailAndPassword(auth, cleanEmail, pass);
       if (!isAuthorizedAdmin(cred.user.email)) {
-        if (auth) await signOut(auth);
+        await signOut(auth);
         return {
           success: false,
           error: "Access Denied: You are not authorized as an administrator.",
         };
       }
-      setIsDemoUser(false);
-      sessionStorage.removeItem("astitva-demo-admin");
       return { success: true };
     } catch (err: unknown) {
       let message = "Failed to sign in";
@@ -121,11 +103,9 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
           err.message.includes("auth/wrong-password") ||
           err.message.includes("auth/user-not-found")
         ) {
-          message =
-            "Incorrect credentials. Please verify your email and password.";
+          message = "Incorrect credentials. Please verify your email and password.";
         } else if (err.message.includes("auth/operation-not-allowed")) {
-          message =
-            "Email/Password sign-in is not enabled in Firebase Console.";
+          message = "Email/Password sign-in is not enabled in Firebase Console.";
         } else if (err.message.includes("auth/too-many-requests")) {
           message = "Access temporarily blocked due to many failed attempts. Try again later.";
         } else {
@@ -137,21 +117,19 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
   };
 
   const signInWithGoogle = async () => {
-    if (!isFirebaseConfigured || !auth || !googleProvider) {
-      return { success: false, error: "Firebase Google Auth is not configured in .env.local yet." };
+    if (!auth || !googleProvider) {
+      return { success: false, error: "Google authentication unavailable." };
     }
 
     try {
       const result = await signInWithPopup(auth, googleProvider);
       if (!isAuthorizedAdmin(result.user.email)) {
-        if (auth) await signOut(auth);
+        await signOut(auth);
         return {
           success: false,
           error: "Access Denied: Your account is not authorized as an administrator.",
         };
       }
-      setIsDemoUser(false);
-      sessionStorage.removeItem("astitva-demo-admin");
       return { success: true };
     } catch (err: unknown) {
       return {
@@ -164,16 +142,7 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
     }
   };
 
-  const loginAsDemoAdmin = () => {
-    setIsDemoUser(true);
-    sessionStorage.setItem("astitva-demo-admin", "1");
-  };
-
   const signOutUser = async () => {
-    if (isDemoUser) {
-      setIsDemoUser(false);
-      sessionStorage.removeItem("astitva-demo-admin");
-    }
     if (auth) {
       await signOut(auth);
     }
@@ -185,11 +154,8 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
       value={{
         user,
         loading,
-        isConfigured: isFirebaseConfigured,
-        isDemoUser,
         signInWithEmail,
         signInWithGoogle,
-        loginAsDemoAdmin,
         signOutUser,
       }}
     >

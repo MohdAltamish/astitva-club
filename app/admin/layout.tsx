@@ -18,7 +18,7 @@ const adminNav = [
 
 export default function AdminLayout({ children }: { children: React.ReactNode }) {
   const pathname = usePathname();
-  const { user, isDemoUser, isConfigured, signOutUser } = useAuth();
+  const { user, signOutUser } = useAuth();
 
   // If on login page, don't show the dashboard shell
   if (pathname === "/admin/login") {
@@ -92,22 +92,14 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
                       isSupabaseConfigured ? "bg-green-400" : "bg-amber-400"
                     }`}
                   />
-                  {isSupabaseConfigured ? "Supabase Live" : "Local / Demo"}
+                  {isSupabaseConfigured ? "Supabase Live" : "Local Database"}
                 </span>
               </div>
               <div className="flex items-center justify-between">
                 <span className="text-gray-400">Auth</span>
-                <span
-                  className={`inline-flex items-center gap-1.5 text-[11px] font-medium ${
-                    isConfigured ? "text-green-400" : "text-blue-400"
-                  }`}
-                >
-                  <span
-                    className={`w-2 h-2 rounded-full ${
-                      isConfigured ? "bg-green-400" : "bg-blue-400"
-                    }`}
-                  />
-                  {isConfigured ? "Firebase" : isDemoUser ? "Demo Admin" : "Guest"}
+                <span className="inline-flex items-center gap-1.5 text-[11px] font-medium text-green-400">
+                  <span className="w-2 h-2 rounded-full bg-green-400" />
+                  Firebase Secure
                 </span>
               </div>
             </div>
@@ -116,7 +108,7 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
             <div className="flex items-center justify-between pt-2">
               <div className="overflow-hidden pr-2">
                 <p className="text-xs font-semibold text-white truncate">
-                  {user?.displayName || (isDemoUser ? "Administrator" : "Admin")}
+                  {user?.displayName || "Administrator"}
                 </p>
                 <p className="text-[11px] text-gray-400 truncate">
                   {user?.email || "admin@astitva.club"}
@@ -125,7 +117,7 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
               <button
                 type="button"
                 onClick={signOutUser}
-                className="text-gray-400 hover:text-red-400 p-2 text-xs transition-colors"
+                className="text-gray-400 hover:text-red-400 p-2 text-xs transition-colors cursor-pointer"
                 title="Log out"
               >
                 <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">

@@ -428,12 +428,12 @@ NEXT_PUBLIC_SUPABASE_ANON_KEY=eyJhbGciOiJIUzI1NiIsIn...`}
                 <span className="font-kicker text-gold-mid uppercase text-xs">Firebase Auth Credentials</span>
                 <p className="text-gray-400 text-xs">Obtained from Firebase Console &gt; Project Settings &gt; Web App SDK configuration.</p>
                 <pre className="text-xs font-mono text-gray-300">
-{`NEXT_PUBLIC_FIREBASE_API_KEY=AIzaSy...
-NEXT_PUBLIC_FIREBASE_AUTH_DOMAIN=astitva-project.firebaseapp.com
-NEXT_PUBLIC_FIREBASE_PROJECT_ID=astitva-project
-NEXT_PUBLIC_FIREBASE_STORAGE_BUCKET=astitva-project.appspot.com
-NEXT_PUBLIC_FIREBASE_MESSAGING_SENDER_ID=123456789
-NEXT_PUBLIC_FIREBASE_APP_ID=1:123456789:web:...`}
+{`NEXT_PUBLIC_FIREBASE_API_KEY=your_firebase_api_key
+NEXT_PUBLIC_FIREBASE_AUTH_DOMAIN=your_project_id.firebaseapp.com
+NEXT_PUBLIC_FIREBASE_PROJECT_ID=your_project_id
+NEXT_PUBLIC_FIREBASE_STORAGE_BUCKET=your_project_id.firebasestorage.app
+NEXT_PUBLIC_FIREBASE_MESSAGING_SENDER_ID=your_messaging_sender_id
+NEXT_PUBLIC_FIREBASE_APP_ID=your_app_id`}
                 </pre>
               </div>
             </div>

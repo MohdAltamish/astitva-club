@@ -5,15 +5,15 @@ import { useRouter, usePathname } from "next/navigation";
 import { useAuth } from "@/context/AuthContext";
 
 export default function ProtectedRoute({ children }: { children: React.ReactNode }) {
-  const { user, isDemoUser, loading } = useAuth();
+  const { user, loading } = useAuth();
   const router = useRouter();
   const pathname = usePathname();
 
   useEffect(() => {
-    if (!loading && !user && !isDemoUser && pathname !== "/admin/login") {
+    if (!loading && !user && pathname !== "/admin/login") {
       router.push("/admin/login");
     }
-  }, [user, isDemoUser, loading, router, pathname]);
+  }, [user, loading, router, pathname]);
 
   if (loading) {
     return (
@@ -26,7 +26,7 @@ export default function ProtectedRoute({ children }: { children: React.ReactNode
     );
   }
 
-  if (!user && !isDemoUser && pathname !== "/admin/login") {
+  if (!user && pathname !== "/admin/login") {
     return null;
   }
 

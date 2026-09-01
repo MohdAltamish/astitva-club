@@ -12,14 +12,12 @@ const firebaseConfig = {
 
 export const isFirebaseConfigured = Boolean(
   firebaseConfig.apiKey &&
-    firebaseConfig.apiKey !== "your-api-key-here" &&
-    firebaseConfig.projectId &&
-    !firebaseConfig.projectId.includes("your-project")
+  firebaseConfig.projectId
 );
 
-let app: FirebaseApp | null = null;
-let auth: Auth | null = null;
-let googleProvider: GoogleAuthProvider | null = null;
+let app: FirebaseApp | undefined;
+let auth: Auth | undefined;
+let googleProvider: GoogleAuthProvider | undefined;
 
 if (isFirebaseConfigured) {
   try {
@@ -27,7 +25,7 @@ if (isFirebaseConfigured) {
     auth = getAuth(app);
     googleProvider = new GoogleAuthProvider();
   } catch (error) {
-    console.warn("Firebase initialization error:", error);
+    console.error("Firebase initialization error:", error);
   }
 }
 
